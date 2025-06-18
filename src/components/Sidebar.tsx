@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Bot, Plus, Pin, User, Trash, ChevronDown, ChevronRight, Settings } from 'lucide-react';
+import { BookOpen, Bot, Pin, User, Trash, ChevronDown, ChevronRight, Settings, MessageSquarePlusIcon } from 'lucide-react';
 import { useChatStore } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -17,11 +17,11 @@ export const Sidebar = () => {
   const userProfile = useChatStore((state) => state.userProfile);
   const updateUserProfile = useChatStore((state) => state.updateUserProfile);
   const deleteProfilePin = useChatStore((state) => state.deleteProfilePin);
-  
+
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
-  const [isThreadsExpanded, setIsThreadsExpanded] = useState(true);
-  const [isPinsExpanded, setIsPinsExpanded] = useState(true);
+  const [isThreadsExpanded, setIsThreadsExpanded] = useState(false);
+  const [isPinsExpanded, setIsPinsExpanded] = useState(false);
   const navigate = useNavigate();
 
   const generateThreadTitle = (content: string) => {
@@ -50,13 +50,6 @@ export const Sidebar = () => {
     <div className="w-64 bg-primary h-screen flex flex-col">
       <div className="p-4 flex justify-between items-center border-b border-secondary/30">
         <h1 className="text-surface text-xl font-bold">Ollama Chat</h1>
-        <button
-          onClick={createThread}
-          className="p-2 rounded-lg bg-secondary text-surface hover:bg-accent transition-colors"
-          title="Create new thread"
-        >
-          <Plus size={20} />
-        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -75,9 +68,25 @@ export const Sidebar = () => {
             </div>
           </button>
 
+          {/* Separator line */}
+          <div className="border-b border-secondary/40 mb-4" />
+
+          {/* New Chat button */}
+          <button
+            onClick={createThread}
+            className="w-full flex items-center justify-center gap-4 p-2 mb-6 rounded-xl bg-gradient-to-r from-primary to-accent text-white font-semibold shadow-lg transition-transform duration-200 hover:scale-105 hover:brightness-110"
+            title="Create new thread"
+          >
+            <MessageSquarePlusIcon size={22} />
+            <span>New Chat</span>
+          </button>
+
+          {/* Separator line */}
+          <div className="border-b border-secondary/40 mb-4" />
+
           {/* Profile pins */}
           <div className="mb-6">
-            <button 
+            <button
               onClick={() => setIsPinsExpanded(!isPinsExpanded)}
               className="w-full text-surface text-sm font-semibold mb-2 flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
             >
@@ -92,11 +101,10 @@ export const Sidebar = () => {
                 {isPinsExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
               </div>
             </button>
-            
-            <div 
-              className={`space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
-                isPinsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
+
+            <div
+              className={`space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${isPinsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {profilePins.length > 0 ? (
                 profilePins.map((pin) => (
@@ -129,7 +137,7 @@ export const Sidebar = () => {
 
           {/* Threads */}
           <div className="mb-6">
-            <button 
+            <button
               onClick={() => setIsThreadsExpanded(!isThreadsExpanded)}
               className="w-full text-surface text-sm font-semibold mb-2 flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
             >
@@ -144,11 +152,10 @@ export const Sidebar = () => {
                 {isThreadsExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
               </div>
             </button>
-            
-            <div 
-              className={`space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
-                isThreadsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
+
+            <div
+              className={`space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${isThreadsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {threads.map((thread) => (
                 <div key={thread.id} className="flex items-center mb-2 gap-2">
@@ -173,11 +180,10 @@ export const Sidebar = () => {
                       onDoubleClick={() =>
                         startEditing(thread.id, thread.title || generateThreadTitle(''))
                       }
-                      className={`flex-1 text-left p-2 rounded transition-colors ${
-                        currentThreadId === thread.id
-                          ? 'bg-secondary text-surface'
-                          : 'text-surface hover:bg-accent/50'
-                      }`}
+                      className={`flex-1 text-left p-2 rounded transition-colors ${currentThreadId === thread.id
+                        ? 'bg-secondary text-surface'
+                        : 'text-surface hover:bg-accent/50'
+                        }`}
                       title="Double click to edit title"
                     >
                       {thread.title?.trim() || generateThreadTitle('')}
@@ -213,7 +219,7 @@ export const Sidebar = () => {
           <Bot size={20} />
           <span>Bots</span>
         </button>
-        
+
         <button
           className="sidebar-button text-surface hover:bg-accent/50 transition-colors flex items-center gap-2 w-full px-3 py-2 rounded"
           onClick={() => setShowSettingsPopup(true)}
@@ -230,7 +236,7 @@ export const Sidebar = () => {
           onUpdateProfile={updateUserProfile}
         />
       )}
-      
+
       {showSettingsPopup && (
         <SettingsPopup
           onClose={() => setShowSettingsPopup(false)}
