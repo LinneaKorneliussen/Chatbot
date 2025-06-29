@@ -79,3 +79,11 @@ export interface Preferences {
   useEmojis: boolean;
   formalTone: boolean;
 }
+export interface Website {
+  id: string;
+  name: string;
+  url: string;
+  icon: string;
+  color: string;
+  description: string;
+}

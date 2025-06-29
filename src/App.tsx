@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { ChatArea } from './components/ChatArea';
-import { BotWidget } from './components/BotWidget';
+import { WebsiteWidget } from './components/WebsiteWidget';
 import { BotsView } from './components/BotsView';
 import { PromptLibrary } from './components/PromptLibrary';
 import { useChatStore } from './store/store';
@@ -31,7 +31,7 @@ function App() {
               <>
                 <Sidebar />
                 <ChatArea />
-                <BotWidget />
+                <WebsiteWidget />
               </>
             }
           />

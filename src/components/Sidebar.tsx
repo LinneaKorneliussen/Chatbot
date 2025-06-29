@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Bot, Pin, User, Trash, ChevronDown, ChevronRight, Settings, MessageSquarePlusIcon } from 'lucide-react';
+import { BookOpen, Bot, Pin, User, Trash, ChevronDown, ChevronRight, Settings, MessageSquarePlusIcon, Search, Circle } from 'lucide-react';
 import { useChatStore } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -20,14 +20,15 @@ export const Sidebar = () => {
 
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
-  const [isThreadsExpanded, setIsThreadsExpanded] = useState(false);
+  const [isThreadsExpanded, setIsThreadsExpanded] = useState(true);
   const [isPinsExpanded, setIsPinsExpanded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const generateThreadTitle = (content: string) => {
-    if (!content) return 'New Thread';
+    if (!content) return 'New Chat';
     const firstLine = content.split('\n')[0];
-    return firstLine.length > 50 ? firstLine.slice(0, 50) + '...' : firstLine;
+    return firstLine.length > 40 ? firstLine.slice(0, 40) + '...' : firstLine;
   };
 
   const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
@@ -46,186 +47,227 @@ export const Sidebar = () => {
     setEditingThreadId(null);
   };
 
+  const filteredThreads = threads.filter(thread => 
+    (thread.title || generateThreadTitle('')).toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="w-64 bg-primary h-screen flex flex-col">
-      <div className="p-4 flex justify-between items-center border-b border-secondary/30">
-        <h1 className="text-surface text-xl font-bold">Ollama Chat</h1>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4">
-          {/* Profile button */}
-          <button
-            onClick={() => setShowProfilePopup(true)}
-            className="w-full mb-5 p-3 bg-primary/30 rounded-lg text-surface hover:bg-secondary/50 transition-colors flex items-center gap-3"
-          >
-            <div className="p-2 rounded-full bg-surface/10">
-              <User size={20} />
+    <div className="w-60 bg-primary h-screen flex flex-col border-r border-secondary/20">
+      {/* Header */}
+      <div className="p-4 border-b border-secondary/20">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-highlight flex items-center justify-center">
+              <Bot size={14} className="text-surface" />
             </div>
-            <div className="text-left flex-1">
-              <div className="font-medium">{userProfile.name}</div>
-              <div className="text-sm opacity-75">{userProfile.team}</div>
-            </div>
-          </button>
-
-          {/* Separator line */}
-          <div className="border-b border-secondary/40 mb-4" />
-
-          {/* New Chat button */}
-          <button
-            onClick={createThread}
-            className="w-full flex items-center justify-center gap-4 p-2 mb-6 rounded-xl bg-gradient-to-r from-primary to-accent text-white font-semibold shadow-lg transition-transform duration-200 hover:scale-105 hover:brightness-110"
-            title="Create new thread"
-          >
-            <MessageSquarePlusIcon size={22} />
-            <span>New Chat</span>
-          </button>
-
-          {/* Separator line */}
-          <div className="border-b border-secondary/40 mb-4" />
-
-          {/* Profile pins */}
-          <div className="mb-6">
-            <button
-              onClick={() => setIsPinsExpanded(!isPinsExpanded)}
-              className="w-full text-surface text-sm font-semibold mb-2 flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <Pin size={16} />
-                <span>Profile Pins</span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-xs bg-secondary/40 rounded-full px-2 py-0.5 mr-2">
-                  {profilePins.length}
-                </span>
-                {isPinsExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-              </div>
-            </button>
-
-            <div
-              className={`space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${isPinsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {profilePins.length > 0 ? (
-                profilePins.map((pin) => (
-                  <div
-                    key={pin.id}
-                    className="bg-primary/30 rounded-lg p-3 text-surface text-sm"
-                  >
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs opacity-75">
-                        {format(pin.timestamp, 'MMM d, HH:mm')}
-                      </span>
-                      <button
-                        onClick={() => deleteProfilePin(pin.id)}
-                        className="text-surface hover:text-red-500 transition-colors"
-                        title="Delete pin"
-                      >
-                        <Trash size={16} />
-                      </button>
-                    </div>
-                    <p className="line-clamp-2">{pin.content}</p>
-                  </div>
-                ))
-              ) : (
-                <div className="bg-primary/30 rounded-lg p-2 text-surface text-sm">
-                  No pinned messages in your profile yet
-                </div>
-              )}
-            </div>
+            <h1 className="text-surface text-lg font-semibold">Ollama Chat</h1>
           </div>
-
-          {/* Threads */}
-          <div className="mb-6">
-            <button
-              onClick={() => setIsThreadsExpanded(!isThreadsExpanded)}
-              className="w-full text-surface text-sm font-semibold mb-2 flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <BookOpen size={16} />
-                <span>Chats</span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-xs bg-secondary/40 rounded-full px-2 py-0.5 mr-2">
-                  {threads.length}
-                </span>
-                {isThreadsExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-              </div>
-            </button>
-
-            <div
-              className={`space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${isThreadsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {threads.map((thread) => (
-                <div key={thread.id} className="flex items-center mb-2 gap-2">
-                  {editingThreadId === thread.id ? (
-                    <input
-                      className="flex-1 p-1 rounded text-black"
-                      value={titleInput}
-                      onChange={(e) => setTitleInput(e.target.value)}
-                      onBlur={() => saveTitle(thread.id)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          saveTitle(thread.id);
-                        } else if (e.key === 'Escape') {
-                          setEditingThreadId(null);
-                        }
-                      }}
-                      autoFocus
-                    />
-                  ) : (
-                    <button
-                      onClick={() => setCurrentThread(thread.id)}
-                      onDoubleClick={() =>
-                        startEditing(thread.id, thread.title || generateThreadTitle(''))
-                      }
-                      className={`flex-1 text-left p-2 rounded transition-colors ${currentThreadId === thread.id
-                        ? 'bg-secondary text-surface'
-                        : 'text-surface hover:bg-accent/50'
-                        }`}
-                      title="Double click to edit title"
-                    >
-                      {thread.title?.trim() || generateThreadTitle('')}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => deleteThread(thread.id)}
-                    className="text-surface hover:text-red-500 transition-colors"
-                    title="Delete thread"
-                  >
-                    <Trash size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
+          <div className="flex items-center gap-1">
+            <Circle size={8} className="text-success fill-success animate-pulse" />
+            <span className="text-xs text-success font-medium">Online</span>
           </div>
         </div>
       </div>
 
-      <div className="p-4 border-t border-secondary/30 space-y-2">
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-3 space-y-4">
+          
+          {/* User Profile */}
+          <button
+            onClick={() => setShowProfilePopup(true)}
+            className="w-full p-3 bg-secondary/20 rounded-lg text-surface hover:bg-secondary/30 transition-colors flex items-center gap-3 border border-secondary/20"
+          >
+            <div className="relative">
+              <div className="w-8 h-8 rounded-full bg-highlight/20 flex items-center justify-center">
+                <User size={16} className="text-highlight" />
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success rounded-full border-2 border-primary"></div>
+            </div>
+            <div className="text-left flex-1 min-w-0">
+              <div className="font-medium text-sm truncate">{userProfile.name}</div>
+              <div className="text-xs text-muted truncate">{userProfile.team}</div>
+            </div>
+          </button>
+
+          {/* Separator */}
+          <div className="border-t border-secondary/20"></div>
+
+          {/* New Chat */}
+          <button
+            onClick={createThread}
+            className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-highlight text-surface font-medium transition-all duration-200 hover:bg-highlight/90 hover:scale-[1.02]"
+          >
+            <MessageSquarePlusIcon size={16} />
+            <span>New Chat</span>
+          </button>
+
+          {/* Separator */}
+          <div className="border-t border-secondary/20"></div>
+
+          {/* Search */}
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
+            <input
+              type="text"
+              placeholder="Search chats..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 bg-secondary/20 border border-secondary/20 rounded-lg text-surface text-sm placeholder-muted focus:border-highlight/50 focus:outline-none transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-surface transition-colors"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          {/* Chats Section */}
+          <div>
+            <button
+              onClick={() => setIsThreadsExpanded(!isThreadsExpanded)}
+              className="w-full text-surface text-sm font-medium flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <BookOpen size={14} className="text-success" />
+                <span>Chats</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs bg-success/20 rounded-full px-2 py-0.5 text-success">
+                  {searchQuery ? filteredThreads.length : threads.length}
+                </span>
+                {isThreadsExpanded ? 
+                  <ChevronDown size={14} className="text-muted" /> : 
+                  <ChevronRight size={14} className="text-muted" />
+                }
+              </div>
+            </button>
+
+            {isThreadsExpanded && (
+              <div className="mt-2 space-y-1 max-h-64 overflow-y-auto">
+                {(searchQuery ? filteredThreads : threads).map((thread) => (
+                  <div key={thread.id} className="flex items-center gap-1 group">
+                    {editingThreadId === thread.id ? (
+                      <input
+                        className="flex-1 p-2 rounded bg-secondary text-surface border border-secondary focus:border-highlight focus:outline-none text-sm"
+                        value={titleInput}
+                        onChange={(e) => setTitleInput(e.target.value)}
+                        onBlur={() => saveTitle(thread.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') saveTitle(thread.id);
+                          if (e.key === 'Escape') setEditingThreadId(null);
+                        }}
+                        autoFocus
+                      />
+                    ) : (
+                      <button
+                        onClick={() => setCurrentThread(thread.id)}
+                        onDoubleClick={() => startEditing(thread.id, thread.title || generateThreadTitle(''))}
+                        className={`flex-1 text-left p-2 rounded text-sm transition-colors min-w-0 ${
+                          currentThreadId === thread.id
+                            ? 'bg-highlight/20 text-surface border border-highlight/30'
+                            : 'text-surface hover:bg-secondary/30'
+                        }`}
+                      >
+                        <span className="truncate block">{thread.title?.trim() || generateThreadTitle('')}</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => deleteThread(thread.id)}
+                      className="text-muted hover:text-error transition-colors p-1 rounded opacity-0 group-hover:opacity-100"
+                    >
+                      <Trash size={12} />
+                    </button>
+                  </div>
+                ))}
+                
+                {searchQuery && filteredThreads.length === 0 && (
+                  <div className="text-muted text-sm text-center py-4 bg-secondary/10 rounded-lg border border-secondary/20">
+                    No chats found for "<span className="text-surface font-medium">{searchQuery}</span>"
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Pins Section */}
+          <div>
+            <button
+              onClick={() => setIsPinsExpanded(!isPinsExpanded)}
+              className="w-full text-surface text-sm font-medium flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <Pin size={14} className="text-warning" />
+                <span>Pinned</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs bg-warning/20 rounded-full px-2 py-0.5 text-warning">
+                  {profilePins.length}
+                </span>
+                {isPinsExpanded ? 
+                  <ChevronDown size={14} className="text-muted" /> : 
+                  <ChevronRight size={14} className="text-muted" />
+                }
+              </div>
+            </button>
+
+            {isPinsExpanded && (
+              <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
+                {profilePins.length > 0 ? (
+                  profilePins.map((pin) => (
+                    <div key={pin.id} className="bg-secondary/20 rounded p-2 text-sm group border border-secondary/20">
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-xs text-muted bg-secondary/30 px-2 py-0.5 rounded">
+                          {format(pin.timestamp, 'MMM d, HH:mm')}
+                        </span>
+                        <button
+                          onClick={() => deleteProfilePin(pin.id)}
+                          className="text-muted hover:text-error transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash size={12} />
+                        </button>
+                      </div>
+                      <p className="text-surface line-clamp-2 text-xs leading-relaxed">{pin.content}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-muted text-xs text-center py-3 bg-secondary/10 rounded border border-secondary/20">
+                    No pinned messages
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="p-3 border-t border-secondary/20 space-y-1">
         <button
-          className="sidebar-button text-surface hover:bg-accent/50 transition-colors flex items-center gap-2 w-full px-3 py-2 rounded"
           onClick={() => navigate('/prompts')}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded text-surface hover:bg-secondary/30 transition-colors text-sm"
         >
-          <BookOpen size={20} />
+          <BookOpen size={16} className="text-highlight" />
           <span>Prompt Library</span>
         </button>
 
         <button
-          className="sidebar-button text-surface hover:bg-accent/50 transition-colors flex items-center gap-2 w-full px-3 py-2 rounded"
           onClick={() => navigate('/bots')}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded text-surface hover:bg-secondary/30 transition-colors text-sm"
         >
-          <Bot size={20} />
+          <Bot size={16} className="text-accent" />
           <span>Bots</span>
         </button>
 
         <button
-          className="sidebar-button text-surface hover:bg-accent/50 transition-colors flex items-center gap-2 w-full px-3 py-2 rounded"
           onClick={() => setShowSettingsPopup(true)}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded text-surface hover:bg-secondary/30 transition-colors text-sm"
         >
-          <Settings size={20} />
-          <span>Preferences</span>
+          <Settings size={16} className="text-success" />
+          <span>Settings</span>
         </button>
       </div>
 

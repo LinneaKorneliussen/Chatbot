@@ -84,7 +84,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
             className="w-full p-3 rounded-t-lg focus:outline-none resize-none min-h-[140px] pr-32"
           />
 
-          {/* Ikoner och knapp i samma bubbla */}
           <div className="absolute right-3 bottom-3 flex items-center gap-2">
             <button
               onClick={toggleRecording}
