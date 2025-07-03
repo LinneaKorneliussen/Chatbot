@@ -80,14 +80,6 @@ const initialWebsites: Website[] = [
     color: 'text-red-500 hover:bg-red-50',
     description: 'Email service'  
   },
-  {
-    id: '6',
-    name: 'Portfolio',
-    url: 'https://example.com',
-    icon: 'globe',
-    color: 'text-green-600 hover:bg-green-50',
-    description: 'Personal website'
-  }
 ];
 
 export const WebsiteWidget = () => { 

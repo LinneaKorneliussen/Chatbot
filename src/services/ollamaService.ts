@@ -37,6 +37,34 @@ export async function generateResponse(prompt: string, contextTokens: number[] =
   }
 }
 
+export async function generateSummary(textToSummarize: string): Promise<string> {
+  const summaryPrompt = `Summarize the following conversation briefly:\n\n${textToSummarize}`;
+
+  try {
+    const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'deepseek-r1:8b',
+        prompt: summaryPrompt,
+        stream: false,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to get summary from Ollama:', errorText);
+      throw new Error(`HTTP_ERROR_${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.response || 'No summary generated.';
+  } catch (error) {
+    console.error('Error in generateSummary:', error);
+    throw error;
+  }
+}
+
 export async function* streamResponse(response: Response): AsyncGenerator<string, void, unknown> {
   const reader = response.body?.getReader();
   if (!reader) throw new Error('NO_RESPONSE_BODY');

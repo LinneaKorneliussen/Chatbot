@@ -5,7 +5,7 @@ interface EmptyChatProps {
   message?: string;
 }
 
-const EmptyChat: React.FC<EmptyChatProps> = ({ 
+export const EmptyChat: React.FC<EmptyChatProps> = ({ 
   message = "Select or create a thread to start chatting" 
 }) => {
   return (
@@ -62,5 +62,3 @@ const EmptyChat: React.FC<EmptyChatProps> = ({
     </div>
   );
 };
-
-export default EmptyChat;

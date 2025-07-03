@@ -21,7 +21,7 @@ function App() {
 
   return (
     <Router>
-      <div className={`flex h-screen ${preferences.theme === 'dark' ? 'bg-gray-900' : 'bg-[#F8F6E8]'}`}>
+      <div className={`flex h-screen w-screen ${preferences.theme === 'dark' ? 'bg-gray-900' : 'bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50'}`}>
         <Routes>
           <Route path="/bots" element={<BotsView />} />
           <Route path="/prompts" element={<PromptLibrary />} />

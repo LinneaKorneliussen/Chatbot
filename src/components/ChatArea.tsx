@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { MessageSquarePlus } from 'lucide-react';
 import { useChatStore } from '../store/store';
-import MessageBubble from './MessageBubble';
-import SavePromptModal from './SavePromptModal';
-import ChatSuggestions from './ChatSuggestions';
-import PinnedMessages from './PinnedMessages';
-import ChatInput from './ChatInput';
-import ChatContext from './ChatContext';
-import EmptyChat from './EmptyChat';
+import { MessageBubble } from './MessageBubble';
+import { SavePromptModal } from './SavePromptModal';
+import { ChatSuggestions } from './ChatSuggestions';
+import { PinnedMessages }  from './PinnedMessages';
+import { ChatInput } from './ChatInput';
+import { ChatContext} from './ChatContext';
+import { EmptyChat } from './EmptyChat';
 
 const SUGGESTIONS = [
   { icon: MessageSquarePlus, text: "What project are you working on? I can help you plan and organize it." },
@@ -17,7 +17,7 @@ const SUGGESTIONS = [
 ];
 
 export const ChatArea: React.FC = () => {
-  const [showPins, setShowPins] = useState(true);
+  const [showPins, setShowPins] = useState(false);
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [showSavePromptModal, setShowSavePromptModal] = useState(false);
   
@@ -58,11 +58,11 @@ export const ChatArea: React.FC = () => {
   if (!currentThread) return <EmptyChat />;
 
   return (
-    <div className="flex flex-1 bg-background text-primary">
+    <div className=" bg-background text-primary w-full h-400 overflow-y-auto">
       <div className="flex-1 flex flex-col">
         <ChatContext summary={currentThread.summary || null} />
         
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 p-4">
           {currentThread.messages.length === 0 ? (
             <ChatSuggestions 
               suggestions={SUGGESTIONS} 
@@ -106,5 +106,3 @@ export const ChatArea: React.FC = () => {
     </div>
   );
 };
-
-export default ChatArea;

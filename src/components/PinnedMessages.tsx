@@ -12,7 +12,7 @@ interface PinnedMessagesProps {
   onTogglePin: (messageId: string) => void;
 }
 
-const PinnedMessages: React.FC<PinnedMessagesProps> = ({
+export const PinnedMessages: React.FC<PinnedMessagesProps> = ({
   showPins,
   pinnedMessages,
   onToggleShowPins,
@@ -122,22 +122,21 @@ const PinnedMessages: React.FC<PinnedMessagesProps> = ({
         </div>
       </div>
 
-      {/* Toggle Button - Improved Design */}
+      {/* Toggle Button */}
       {!showPins && (
         <button
           onClick={onToggleShowPins}
-          className="fixed top-[60%] transform -translate-y-1/2 right-0 bg-gradient-to-br from-highlight via-highlight/90 to-highlight/80 text-surface p-4 rounded-l-2xl shadow-xl hover:shadow-2xl transition-all duration-300 z-50 group hover:scale-105 active:scale-95 border-l-4 border-highlight/30"
+          className="fixed top-[70%] transform -translate-y-1/2 right-0 bg-gradient-to-br from-highlight via-highlight/90 to-highlight/80 text-surface p-4 rounded-l-2xl shadow-xl hover:shadow-2xl transition-all duration-300 z-50 group hover:scale-105 active:scale-95 border-l-4 border-highlight/30"
           style={{ 
             background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%)',
             boxShadow: '0 10px 30px rgba(59, 130, 246, 0.4), 0 4px 15px rgba(59, 130, 246, 0.2)'
           }}
-          aria-label="Open pinned messages panel"
         >
           <div className="relative flex items-center justify-center">
-            <Pin size={24} className="transition-transform duration-200 group-hover:rotate-12 drop-shadow-sm" />
+            <Pin size={20} className="transition-transform duration-200 group-hover:rotate-12 drop-shadow-sm" />
             {pinnedMessages.length > 0 && (
-              <div className="absolute -top-3 -right-3 min-w-[24px] h-6 bg-warning text-surface text-xs rounded-full flex items-center justify-center font-bold shadow-lg animate-pulse border-2 border-surface/20">
-                {pinnedMessages.length > 99 ? '99+' : pinnedMessages.length}
+              <div className="absolute -top-5 -right-3 min-w-[22px] h-6 bg-warning text-surface text-xs rounded-full flex items-center justify-center font-bold shadow-lg animate-pulse border-2 border-surface/20">
+                {pinnedMessages.length > 50 ? '50+' : pinnedMessages.length}
               </div>
             )}
           </div>
@@ -146,5 +145,3 @@ const PinnedMessages: React.FC<PinnedMessagesProps> = ({
     </>
   );
 };
-
-export default PinnedMessages;

@@ -47,7 +47,7 @@ export const Sidebar = () => {
     setEditingThreadId(null);
   };
 
-  const filteredThreads = threads.filter(thread => 
+  const filteredThreads = threads.filter(thread =>
     (thread.title || generateThreadTitle('')).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -70,9 +70,9 @@ export const Sidebar = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1">
         <div className="p-3 space-y-4">
-          
+
           {/* User Profile */}
           <button
             onClick={() => setShowProfilePopup(true)}
@@ -124,9 +124,12 @@ export const Sidebar = () => {
               </button>
             )}
           </div>
+          
+          {/* Separator */}
+          <div className="border-t border-secondary/20"></div>
 
           {/* Chats Section */}
-          <div>
+          <div className="overflow-y-auto">
             <button
               onClick={() => setIsThreadsExpanded(!isThreadsExpanded)}
               className="w-full text-surface text-sm font-medium flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
@@ -139,15 +142,15 @@ export const Sidebar = () => {
                 <span className="text-xs bg-success/20 rounded-full px-2 py-0.5 text-success">
                   {searchQuery ? filteredThreads.length : threads.length}
                 </span>
-                {isThreadsExpanded ? 
-                  <ChevronDown size={14} className="text-muted" /> : 
+                {isThreadsExpanded ?
+                  <ChevronDown size={14} className="text-muted" /> :
                   <ChevronRight size={14} className="text-muted" />
                 }
               </div>
             </button>
 
             {isThreadsExpanded && (
-              <div className="mt-2 space-y-1 max-h-64 overflow-y-auto">
+              <div className="mt-2 space-y-1 max-h-64">
                 {(searchQuery ? filteredThreads : threads).map((thread) => (
                   <div key={thread.id} className="flex items-center gap-1 group">
                     {editingThreadId === thread.id ? (
@@ -166,11 +169,10 @@ export const Sidebar = () => {
                       <button
                         onClick={() => setCurrentThread(thread.id)}
                         onDoubleClick={() => startEditing(thread.id, thread.title || generateThreadTitle(''))}
-                        className={`flex-1 text-left p-2 rounded text-sm transition-colors min-w-0 ${
-                          currentThreadId === thread.id
+                        className={`flex-1 text-left p-2 rounded text-sm transition-colors min-w-0 ${currentThreadId === thread.id
                             ? 'bg-highlight/20 text-surface border border-highlight/30'
                             : 'text-surface hover:bg-secondary/30'
-                        }`}
+                          }`}
                       >
                         <span className="truncate block">{thread.title?.trim() || generateThreadTitle('')}</span>
                       </button>
@@ -183,7 +185,7 @@ export const Sidebar = () => {
                     </button>
                   </div>
                 ))}
-                
+
                 {searchQuery && filteredThreads.length === 0 && (
                   <div className="text-muted text-sm text-center py-4 bg-secondary/10 rounded-lg border border-secondary/20">
                     No chats found for "<span className="text-surface font-medium">{searchQuery}</span>"
@@ -194,7 +196,7 @@ export const Sidebar = () => {
           </div>
 
           {/* Pins Section */}
-          <div>
+          <div className="overflow-y-auto">
             <button
               onClick={() => setIsPinsExpanded(!isPinsExpanded)}
               className="w-full text-surface text-sm font-medium flex items-center justify-between hover:bg-secondary/20 p-2 rounded transition-colors"
@@ -207,15 +209,15 @@ export const Sidebar = () => {
                 <span className="text-xs bg-warning/20 rounded-full px-2 py-0.5 text-warning">
                   {profilePins.length}
                 </span>
-                {isPinsExpanded ? 
-                  <ChevronDown size={14} className="text-muted" /> : 
+                {isPinsExpanded ?
+                  <ChevronDown size={14} className="text-muted" /> :
                   <ChevronRight size={14} className="text-muted" />
                 }
               </div>
             </button>
 
             {isPinsExpanded && (
-              <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
+              <div className="mt-2 space-y-2 max-h-48">
                 {profilePins.length > 0 ? (
                   profilePins.map((pin) => (
                     <div key={pin.id} className="bg-secondary/20 rounded p-2 text-sm group border border-secondary/20">

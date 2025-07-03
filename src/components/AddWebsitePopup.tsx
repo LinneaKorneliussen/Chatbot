@@ -67,7 +67,7 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
       url: formattedUrl,
       description: description.trim() || 'Custom website',
       icon: selectedIcon,
-      color: 'text-blue-500 hover:bg-blue-50'
+      color: 'text-highlight hover:bg-blue-50'
     });
 
     onClose();
@@ -81,18 +81,18 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
 
   return (
     <div 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden">
+      <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden border border-gray-200/50">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Add Website</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
+          <h2 className="text-xl font-semibold text-primary">Add Website</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+            className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-background transition-colors"
           >
-            <X size={16} className="text-gray-500" />
+            <X size={16} className="text-muted" />
           </button>
         </div>
 
@@ -101,7 +101,7 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* Name Input */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-accent mb-2">
                 Website Name
               </label>
               <input
@@ -110,14 +110,14 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g., My Portfolio"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-200/50 rounded-xl focus:ring-2 focus:ring-highlight/20 focus:border-blue-300 transition-all bg-background/50 text-primary placeholder-muted"
                 required
               />
             </div>
 
             {/* URL Input */}
             <div>
-              <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="url" className="block text-sm font-medium text-accent mb-2">
                 Website URL
               </label>
               <div className="relative">
@@ -127,16 +127,16 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="e.g., myportfolio.com"
-                  className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 pl-10 border border-gray-200/50 rounded-xl focus:ring-2 focus:ring-highlight/20 focus:border-blue-300 transition-all bg-background/50 text-primary placeholder-muted"
                   required
                 />
-                <ExternalLink size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <ExternalLink size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
               </div>
             </div>
 
             {/* Description Input */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-accent mb-2">
                 Description (Optional)
               </label>
               <input
@@ -145,25 +145,25 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g., Personal portfolio website"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-200/50 rounded-xl focus:ring-2 focus:ring-highlight/20 focus:border-blue-300 transition-all bg-background/50 text-primary placeholder-muted"
               />
             </div>
 
             {/* Icon Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-accent mb-3">
                 Choose Icon
               </label>
-              <div className="grid grid-cols-7 gap-2 max-h-48 overflow-y-auto p-2 border border-gray-200 rounded-xl bg-gray-50">
+              <div className="grid grid-cols-7 gap-2 max-h-48 overflow-y-auto p-3 border border-gray-200/50 rounded-xl bg-background/30">
                 {iconOptions.map(({ key, icon: Icon, name, category }) => (
                   <button
                     key={key}
                     type="button"
                     onClick={() => setSelectedIcon(key)}
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all border-2 ${
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all border-2 ${
                       selectedIcon === key
-                        ? 'border-blue-500 bg-blue-50 text-blue-600 shadow-sm'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-white text-gray-600 hover:shadow-sm'
+                        ? 'border-highlight bg-blue-50 text-highlight shadow-sm'
+                        : 'border-gray-200/50 hover:border-gray-300 hover:bg-surface text-secondary hover:shadow-sm'
                     }`}
                     title={`${name} (${category})`}
                   >
@@ -171,7 +171,7 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-muted mt-2">
                 {iconOptions.find(opt => opt.key === selectedIcon)?.name} - {iconOptions.find(opt => opt.key === selectedIcon)?.category}
               </p>
             </div>
@@ -181,13 +181,13 @@ export const AddWebsitePopup: React.FC<AddWebsitePopupProps> = ({ onClose, onAdd
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+                className="flex-1 px-4 py-3 border border-gray-200/50 rounded-xl text-secondary hover:bg-background transition-colors font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-highlight to-indigo-500 text-white rounded-xl hover:shadow-lg hover:shadow-highlight/25 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!name.trim() || !url.trim()}
               >
                 Add Website

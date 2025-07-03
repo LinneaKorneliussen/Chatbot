@@ -3,7 +3,7 @@ import {
   Search, ArrowLeft, Tag, Plus, X, Star, Trash2,
   Brain, FileText, Calendar, CheckSquare, PieChart,
   Database, Code, Calculator, FileSearch, Languages,
-  Microscope, Globe, Lock, Unlock, User
+  Microscope, Globe, Lock, Unlock, User, Sparkles
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useChatStore } from '../store/store';
@@ -122,65 +122,75 @@ export const BotsView = () => {
   };
 
   return (
-    <div className="flex-1 bg-background overflow-y-auto">
-      <div className="max-w-6xl mx-auto p-8">
-        <div className="flex justify-between items-center mb-8">
+    <div className="flex-1 bg-gradient-to-br from-background via-background to-surface overflow-y-auto">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-10">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-primary hover:text-accent transition-colors"
+            className="group flex items-center gap-3 px-4 py-2 rounded-xl bg-surface hover:bg-highlight hover:text-surface transition-all duration-200 shadow-sm hover:shadow-md border border-muted/20"
           >
-            <ArrowLeft size={20} />
-            <span>Back to Chat</span>
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-200" />
+            <span className="font-medium">Back to Chat</span>
           </button>
           <button
             onClick={() => setShowCustomBotModal(true)}
-            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-accent transition-colors"
+            className="group flex items-center gap-3 bg-gradient-to-r from-highlight to-success text-surface px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-200 transform hover:scale-105"
           >
-            <Plus size={20} />
-            <span>Create Custom Bot</span>
+            <Plus size={20} className="group-hover:rotate-90 transition-transform duration-200" />
+            <span className="font-semibold">Create Custom Bot</span>
           </button>
         </div>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-primary mb-2">AI Specialists</h1>
-          <p className="text-primary/70">
-            Discover and create specialized AI assistants
+        {/* Title Section */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-r from-highlight to-success rounded-full">
+              <Sparkles className="text-surface" size={32} />
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-highlight bg-clip-text text-transparent">
+              AI Specialists
+            </h1>
+          </div>
+          <p className="text-lg text-muted max-w-2xl mx-auto">
+            Discover and create specialized AI assistants tailored to your needs
           </p>
         </div>
 
-        <div className="bg-surface rounded-xl shadow-sm mb-8">
-          <div className="p-4 border-b border-accent/20">
-            <div className="flex gap-4 mb-4">
-              <div className="flex-1 relative">
-                <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50" />
-                <input
-                  type="text"
-                  placeholder="Search bots..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
+        {/* Search and Filter Section */}
+        <div className="bg-surface rounded-2xl shadow-lg border border-muted/10 mb-8 backdrop-blur-sm">
+          <div className="p-6 border-b border-muted/10">
+            {/* Search Bar */}
+            <div className="relative mb-6">
+              <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+              <input
+                type="text"
+                placeholder="Search bots by name, description, or tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 border border-muted/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-highlight focus:border-highlight transition-all duration-200 text-lg bg-background/50"
+              />
             </div>
 
-            <div className="flex items-center gap-4 mb-4">
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
               <button
                 onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
                   showOnlyFavorites
-                    ? 'bg-primary text-white'
-                    : 'bg-accent/20 text-primary'
+                    ? 'bg-gradient-to-r from-warning to-error text-surface shadow-md'
+                    : 'bg-muted/10 text-secondary hover:bg-muted/20'
                 }`}
               >
-                <Star size={16} />
+                <Star size={16} fill={showOnlyFavorites ? 'currentColor' : 'none'} />
                 <span>Favorites</span>
               </button>
               <button
                 onClick={() => setShowOnlyMine(!showOnlyMine)}
-                className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
                   showOnlyMine
-                    ? 'bg-primary text-white'
-                    : 'bg-accent/20 text-primary'
+                    ? 'bg-gradient-to-r from-highlight to-success text-surface shadow-md'
+                    : 'bg-muted/10 text-secondary hover:bg-muted/20'
                 }`}
               >
                 <User size={16} />
@@ -188,260 +198,310 @@ export const BotsView = () => {
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {allTags.map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTags(prev =>
-                    prev.includes(tag)
-                      ? prev.filter(t => t !== tag)
-                      : [...prev, tag]
-                  )}
-                  className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
-                    selectedTags.includes(tag)
-                      ? 'bg-primary text-white'
-                      : 'bg-accent/20 text-primary'
-                  }`}
-                >
-                  <Tag size={14} />
-                  {tag}
-                </button>
-              ))}
-            </div>
+            {/* Tags */}
+            {allTags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {allTags.map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTags(prev =>
+                      prev.includes(tag)
+                        ? prev.filter(t => t !== tag)
+                        : [...prev, tag]
+                    )}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1.5 transition-all duration-200 ${
+                      selectedTags.includes(tag)
+                        ? 'bg-gradient-to-r from-primary to-secondary text-surface shadow-sm'
+                        : 'bg-muted/10 text-secondary hover:bg-muted/20'
+                    }`}
+                  >
+                    <Tag size={12} />
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-            {filteredBots.map((bot) => {
-              const Icon = iconMap[bot.icon] || Brain;
-              return (
-                <div
-                  key={bot.id}
-                  className="bg-background rounded-xl p-6 hover:shadow-md transition-shadow relative group"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-lg bg-primary text-white">
-                        <Icon size={24} />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-primary mb-1 flex items-center gap-2">
-                          {bot.name}
-                          {bot.isPublic ? (
-                            <Unlock size={14} className="text-accent" />
-                          ) : (
-                            <Lock size={14} className="text-accent" />
-                          )}
-                        </h3>
-                        <p className="text-sm text-primary/70 line-clamp-2">
-                          {bot.description}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <button
-                        onClick={() => toggleBotFavorite(bot.id)}
-                        className={`p-1 rounded hover:bg-accent/20 transition-colors ${
-                          bot.isFavorited ? 'text-yellow-500' : 'text-primary/50'
-                        }`}
-                        title={bot.isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-                      >
-                        <Star size={18} fill={bot.isFavorited ? 'currentColor' : 'none'} />
-                      </button>
-                      {bot.createdBy === userProfile.email && (
-                        <button
-                          onClick={() => deleteBot(bot.id)}
-                          className="p-1 text-red-500 hover:bg-red-50 rounded transition-colors"
-                          title="Delete bot"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {bot.abilities && bot.abilities.length > 0 && (
-                    <div className="mb-3">
-                      <h4 className="text-sm font-medium text-primary mb-2">Abilities</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {bot.abilities.map(ability => (
-                          <span
-                            key={ability}
-                            className="px-2 py-0.5 bg-accent/20 text-primary rounded-full text-xs"
-                          >
-                            {ability}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-4 text-xs text-primary/60 mb-2">
-                    <span className="flex items-center gap-1">
-                      <User size={12} />
-                      {bot.createdBy === 'system' ? 'System' : 'Custom'}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Star size={12} />
-                      {bot.favorites || 0}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar size={12} />
-                      {format(new Date(bot.createdAt), 'yyyy-MM-dd')}
-                    </span>
-                  </div>
-
-                   <button
-                    onClick={() => {
-                      const threadId = createThread();
-                      addMessage(threadId, {
-                        id: Date.now().toString(),
-                        role: 'assistant',
-                        content: `Hi! I'm ${bot.name}. ${bot.description} How can I help you today?`,
-                        timestamp: new Date(),
-                        isPinned: false
-                      });
-                      navigate('/');
-                    }}
-                    className="w-full bg-primary text-white rounded-lg py-2 hover:bg-accent transition-colors"
+          {/* Bots Grid */}
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredBots.map((bot) => {
+                const Icon = iconMap[bot.icon] || Brain;
+                return (
+                  <div
+                    key={bot.id}
+                    className="group bg-gradient-to-br from-surface to-background rounded-xl p-6 border border-muted/10 hover:shadow-lg hover:shadow-highlight/10 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
                   >
-                    Chat
-                  </button>
-                </div>
-              );
-            })}
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-highlight to-success" />
+                    
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-4 relative">
+                      <div className="flex items-start gap-4">
+                        <div className="relative">
+                          <div className="p-3 rounded-xl bg-gradient-to-r from-highlight to-success text-surface shadow-sm">
+                            <Icon size={24} />
+                          </div>
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-highlight to-success opacity-20 blur-sm" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-primary mb-1 flex items-center gap-2 group-hover:text-highlight transition-colors duration-200">
+                            {bot.name}
+                            {bot.isPublic ? (
+                              <Unlock size={14} className="text-success" />
+                            ) : (
+                              <Lock size={14} className="text-warning" />
+                            )}
+                          </h3>
+                          <p className="text-sm text-muted line-clamp-2 leading-relaxed">
+                            {bot.description}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex items-start gap-2">
+                        <button
+                          onClick={() => toggleBotFavorite(bot.id)}
+                          className={`p-2 rounded-lg transition-all duration-200 ${
+                            bot.isFavorited 
+                              ? 'text-warning bg-warning/10 hover:bg-warning/20' 
+                              : 'text-muted hover:text-warning hover:bg-warning/10'
+                          }`}
+                          title={bot.isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                          <Star size={16} fill={bot.isFavorited ? 'currentColor' : 'none'} />
+                        </button>
+                        {bot.createdBy === userProfile.email && (
+                          <button
+                            onClick={() => deleteBot(bot.id)}
+                            className="p-2 text-muted hover:text-error hover:bg-error/10 rounded-lg transition-all duration-200"
+                            title="Delete bot"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Abilities */}
+                    {bot.abilities && bot.abilities.length > 0 && (
+                      <div className="mb-4 relative">
+                        <h4 className="text-sm font-semibold text-primary mb-2">Abilities</h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {bot.abilities.slice(0, 3).map(ability => (
+                            <span
+                              key={ability}
+                              className="px-2 py-1 bg-highlight/10 text-highlight rounded-md text-xs font-medium"
+                            >
+                              {ability}
+                            </span>
+                          ))}
+                          {bot.abilities.length > 3 && (
+                            <span className="px-2 py-1 bg-muted/10 text-muted rounded-md text-xs font-medium">
+                              +{bot.abilities.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Meta Information */}
+                    <div className="flex items-center gap-4 text-xs text-muted mb-4 relative">
+                      <span className="flex items-center gap-1">
+                        <User size={12} />
+                        {bot.createdBy === 'system' ? 'System' : 'Custom'}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Star size={12} />
+                        {bot.favorites || 0}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Calendar size={12} />
+                        {format(new Date(bot.createdAt), 'MMM dd')}
+                      </span>
+                    </div>
+
+                    {/* Chat Button */}
+                    <button
+                      onClick={() => {
+                        const threadId = createThread();
+                        addMessage(threadId, {
+                          id: Date.now().toString(),
+                          role: 'assistant',
+                          content: `Hi! I'm ${bot.name}. ${bot.description} How can I help you today?`,
+                          timestamp: new Date(),
+                          isPinned: false
+                        });
+                        navigate('/');
+                      }}
+                      className="w-full bg-gradient-to-r from-primary to-secondary text-surface rounded-xl py-3 font-semibold hover:from-highlight hover:to-success transition-all duration-200 hover:shadow-md transform hover:scale-105 relative overflow-hidden group"
+                    >
+                      <span className="relative z-10">Start Chat</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-highlight to-success opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Modal for creating custom bot */}
+        {/* Custom Bot Modal */}
         {showCustomBotModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-surface rounded-xl p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-lg">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-primary">Create Custom Bot</h2>
-                <button
-                  onClick={() => setShowCustomBotModal(false)}
-                  className="text-primary hover:text-accent transition-colors"
-                  aria-label="Close modal"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-primary mb-1 font-medium" htmlFor="bot-name">Bot Name</label>
-                <input
-                  id="bot-name"
-                  type="text"
-                  value={customBotData.name}
-                  onChange={e => setCustomBotData({...customBotData, name: e.target.value})}
-                  className="w-full border border-accent rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Enter bot name"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-primary mb-1 font-medium">Abilities</label>
-                <div className="flex flex-wrap gap-2">
-                  {ABILITIES.map(ability => (
-                    <button
-                      key={ability}
-                      type="button"
-                      onClick={() => {
-                        setCustomBotData(prev => {
-                          const has = prev.abilities.includes(ability);
-                          return {
-                            ...prev,
-                            abilities: has
-                              ? prev.abilities.filter(a => a !== ability)
-                              : [...prev.abilities, ability]
-                          };
-                        });
-                      }}
-                      className={`px-3 py-1 rounded-full text-sm border transition-colors ${
-                        customBotData.abilities.includes(ability)
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-background text-primary border-accent'
-                      }`}
-                    >
-                      {ability}
-                    </button>
-                  ))}
+          <div className="fixed inset-0 bg-primary/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-surface rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-8">
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h2 className="text-3xl font-bold text-primary mb-2">Create Custom Bot</h2>
+                    <p className="text-muted">Build your specialized AI assistant</p>
+                  </div>
+                  <button
+                    onClick={() => setShowCustomBotModal(false)}
+                    className="text-muted hover:text-primary hover:bg-muted/10 p-2 rounded-lg transition-all duration-200"
+                    aria-label="Close modal"
+                  >
+                    <X size={24} />
+                  </button>
                 </div>
-              </div>
 
-              <div className="mb-4">
-                <label className="block text-primary mb-1 font-medium">Data Sources</label>
-                <div className="flex flex-wrap gap-2">
-                  {DATA_SOURCES.map(source => (
-                    <button
-                      key={source}
-                      type="button"
-                      onClick={() => {
-                        setCustomBotData(prev => {
-                          const has = prev.dataSources.includes(source);
-                          return {
-                            ...prev,
-                            dataSources: has
-                              ? prev.dataSources.filter(d => d !== source)
-                              : [...prev.dataSources, source]
-                          };
-                        });
+                <div className="space-y-6">
+                  {/* Bot Name */}
+                  <div>
+                    <label className="block text-primary mb-2 font-semibold" htmlFor="bot-name">
+                      Bot Name
+                    </label>
+                    <input
+                      id="bot-name"
+                      type="text"
+                      value={customBotData.name}
+                      onChange={e => setCustomBotData({...customBotData, name: e.target.value})}
+                      className="w-full border border-muted/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-highlight focus:border-highlight transition-all duration-200"
+                      placeholder="Enter a unique name for your bot"
+                    />
+                  </div>
+
+                  {/* Abilities */}
+                  <div>
+                    <label className="block text-primary mb-3 font-semibold">
+                      Abilities <span className="text-muted font-normal">(Select at least one)</span>
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {ABILITIES.map(ability => (
+                        <button
+                          key={ability}
+                          type="button"
+                          onClick={() => {
+                            setCustomBotData(prev => {
+                              const has = prev.abilities.includes(ability);
+                              return {
+                                ...prev,
+                                abilities: has
+                                  ? prev.abilities.filter(a => a !== ability)
+                                  : [...prev.abilities, ability]
+                              };
+                            });
+                          }}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            customBotData.abilities.includes(ability)
+                              ? 'bg-gradient-to-r from-highlight to-success text-surface shadow-sm'
+                              : 'bg-muted/10 text-secondary hover:bg-muted/20'
+                          }`}
+                        >
+                          {ability}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Data Sources */}
+                  <div>
+                    <label className="block text-primary mb-3 font-semibold">
+                      Data Sources <span className="text-muted font-normal">(Optional)</span>
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {DATA_SOURCES.map(source => (
+                        <button
+                          key={source}
+                          type="button"
+                          onClick={() => {
+                            setCustomBotData(prev => {
+                              const has = prev.dataSources.includes(source);
+                              return {
+                                ...prev,
+                                dataSources: has
+                                  ? prev.dataSources.filter(d => d !== source)
+                                  : [...prev.dataSources, source]
+                              };
+                            });
+                          }}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            customBotData.dataSources.includes(source)
+                              ? 'bg-gradient-to-r from-primary to-secondary text-surface shadow-sm'
+                              : 'bg-muted/10 text-secondary hover:bg-muted/20'
+                          }`}
+                        >
+                          {source}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div>
+                    <label className="block text-primary mb-2 font-semibold">Tags</label>
+                    <input
+                      type="text"
+                      placeholder="Add tags separated by commas (e.g., finance, analysis, reports)"
+                      value={customBotData.tags.join(', ')}
+                      onChange={e => {
+                        const tags = e.target.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+                        setCustomBotData({...customBotData, tags});
                       }}
-                      className={`px-3 py-1 rounded-full text-sm border transition-colors ${
-                        customBotData.dataSources.includes(source)
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-background text-primary border-accent'
-                      }`}
-                    >
-                      {source}
-                    </button>
-                  ))}
+                      className="w-full border border-muted/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-highlight focus:border-highlight transition-all duration-200"
+                    />
+                  </div>
+
+                  {/* Public/Private */}
+                  <div className="flex items-center gap-3 p-4 bg-muted/5 rounded-xl">
+                    <input
+                      id="isPublic"
+                      type="checkbox"
+                      checked={customBotData.isPublic}
+                      onChange={e => setCustomBotData({...customBotData, isPublic: e.target.checked})}
+                      className="w-5 h-5 text-highlight rounded focus:ring-highlight border-muted/20"
+                    />
+                    <label htmlFor="isPublic" className="text-primary font-medium select-none cursor-pointer">
+                      Make bot public
+                    </label>
+                    <span className="text-muted text-sm">
+                      {customBotData.isPublic ? 'Other users can discover and use this bot' : 'Only you can use this bot'}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mb-4">
-                <label className="block text-primary mb-1 font-medium">Tags</label>
-                <input
-                  type="text"
-                  placeholder="Add tags separated by commas"
-                  value={customBotData.tags.join(', ')}
-                  onChange={e => {
-                    const tags = e.target.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
-                    setCustomBotData({...customBotData, tags});
-                  }}
-                  className="w-full border border-accent rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-
-              <div className="mb-6 flex items-center gap-2">
-                <input
-                  id="isPublic"
-                  type="checkbox"
-                  checked={customBotData.isPublic}
-                  onChange={e => setCustomBotData({...customBotData, isPublic: e.target.checked})}
-                  className="accent-primary"
-                />
-                <label htmlFor="isPublic" className="text-primary select-none">Make bot public</label>
-              </div>
-
-              <div className="flex justify-end gap-4">
-                <button
-                  onClick={() => setShowCustomBotModal(false)}
-                  className="px-6 py-2 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleCreateBot}
-                  disabled={!customBotData.name || customBotData.abilities.length === 0}
-                  className={`px-6 py-2 rounded-lg text-white transition-colors ${
-                    !customBotData.name || customBotData.abilities.length === 0
-                      ? 'bg-primary/50 cursor-not-allowed'
-                      : 'bg-primary hover:bg-accent'
-                  }`}
-                >
-                  Create
-                </button>
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-muted/10">
+                  <button
+                    onClick={() => setShowCustomBotModal(false)}
+                    className="px-6 py-3 rounded-xl border border-muted/20 text-secondary hover:bg-muted/10 transition-all duration-200 font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleCreateBot}
+                    disabled={!customBotData.name || customBotData.abilities.length === 0}
+                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                      !customBotData.name || customBotData.abilities.length === 0
+                        ? 'bg-muted/20 text-muted cursor-not-allowed'
+                        : 'bg-gradient-to-r from-highlight to-success text-surface hover:shadow-lg transform hover:scale-105'
+                    }`}
+                  >
+                    Create Bot
+                  </button>
+                </div>
               </div>
             </div>
           </div>

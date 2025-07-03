@@ -93,7 +93,7 @@ export const SettingsPopup = ({ onClose }: SettingsPopupProps) => {
             </div>
           </div>
 
-           {/* Language Settings */}
+          {/* Language Settings */}
           <div className="space-y-4">
             <h3 className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 font-medium">
               Language
@@ -109,7 +109,11 @@ export const SettingsPopup = ({ onClose }: SettingsPopupProps) => {
 
               <select
                 value={localLanguage}
-                onChange={(e) => setLocalLanguage(e.target.value)} // Update local state
+                onChange={(e) => {
+                  const newLanguage = e.target.value;
+                  setLocalLanguage(newLanguage);
+                  updatePreferences({ language: newLanguage });
+                }}
                 className="w-full p-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="english">English</option>

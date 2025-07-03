@@ -1,22 +1,40 @@
-import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ChatContextProps {
   summary: string | null;
 }
 
-const ChatContext: React.FC<ChatContextProps> = ({ summary }) => {
+export const ChatContext: React.FC<ChatContextProps> = ({ summary }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
   if (!summary) return null;
-  
+
   return (
-    <div className="bg-surface/50 p-4 mx-4 mt-4 rounded-lg flex items-start gap-3 shadow-sm">
-      <AlertCircle size={24} className="text-primary flex-shrink-0 mt-1" />
-      <div>
-        <p className="text-sm font-medium text-primary mb-2">Context Summary</p>
-        <p className="text-sm text-primary/80 leading-relaxed">{summary}</p>
+    <div
+      className="
+        sticky top-4 mx-auto max-w-xl
+        bg-gradient-to-r from-blue-50 to-white
+        border border-blue-200
+        rounded-2xl
+        p-5
+        shadow-md
+        flex flex-col gap-2
+        z-40
+      "
+    >
+      <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <div className="flex items-center gap-4">
+          <BookOpen size={28} className="text-blue-600 flex-shrink-0" />
+          <p className="text-blue-700 font-semibold text-lg select-none">Context Summary</p>
+        </div>
+        {isOpen ? (
+          <ChevronUp size={20} className="text-blue-600" />
+        ) : (
+          <ChevronDown size={20} className="text-blue-600" />
+        )}
       </div>
+      {isOpen && <p className="text-blue-600 text-sm leading-relaxed">{summary}</p>}
     </div>
   );
 };
-
-export default ChatContext;

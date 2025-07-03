@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { checkOllamaConnection, generateResponse, streamResponse } from '../services/ollamaService';
-import { Message, Thread, Bot, UserProfile, SavedPrompt, Preferences } from '../types/types';
+import { checkOllamaConnection, generateResponse, streamResponse, generateSummary } from '../services/ollamaService';
+import { Message, Thread, Bot, UserProfile, SavedPrompt, Preferences  } from '../types/types';
 import { countTokens } from '../utils/tokenizer';
 
 interface ChatState {
@@ -134,6 +134,21 @@ export const useChatStore = create<ChatState>((set, get) => ({
             ),
           }));
         }
+
+        // När hela assistant-svaret är klart: generera summary
+        if (currentThread) {
+          const chatHistory = currentThread.messages.map(m => m.content).join('\n');
+          // Anropa din generateSummary-funktion som returnerar en string
+          const summary = await generateSummary(chatHistory);
+
+          set((state) => ({
+            threads: state.threads.map((thread) =>
+              thread.id === threadId
+                ? { ...thread, summary }
+                : thread
+            ),
+          }));
+        }
       } catch (error: any) {
         console.error('Failed to get response from Ollama:', error);
 
@@ -202,12 +217,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     formalTone: true,
   },
 
-  updatePreferences: (updates) => 
+  updatePreferences: (updates) =>
     set((state) => ({
       preferences: { ...state.preferences, ...updates }
     })),
   // #endregion
-  
+
   // #region Pins
   togglePin: (threadId, messageId, isProfilePin = false) => {
     set((state) => {
